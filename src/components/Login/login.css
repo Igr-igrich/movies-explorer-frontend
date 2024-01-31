@@ -1,0 +1,10 @@
+.auth-form__button_login {
+  margin-top: 159px;
+}
+
+@media screen and (max-width: 510px) {
+  .auth-form__button_login {
+    margin-top: 247px;
+    font-size: 12px;
+  }
+}

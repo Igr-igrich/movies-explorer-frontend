@@ -1,0 +1,151 @@
+.header {
+  max-width: calc(100% - 140px);
+  height: 74px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header__logo {
+  transition: all 0.3s;
+}
+
+.header__logo:hover {
+  opacity: 0.8;
+  transform: scale(0.95);
+}
+
+.header__navigation {
+  position: absolute;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, 0%);
+}
+
+.header__signup-button {
+  background-color: #202020;
+  border: none;
+  color: #fff;
+  padding: 0;
+  cursor: pointer;
+  font-family: Inter;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.33;
+  margin-right: 30px;
+  transition: all 0.3s;
+}
+
+.header__signup-button:hover {
+  opacity: 0.8;
+  transform: scale(0.95);
+}
+
+.header__signin-button {
+  background-color: #3ddc84;
+  border: none;
+  padding: 0;
+  width: 76px;
+  height: 32px;
+  border-radius: 3px;
+  font-family: Inter;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.33;
+  cursor: pointer;
+  transition:
+    transform 0.5s,
+    opacity 0.5s;
+}
+
+.header__signin-button:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.header__burger-button {
+  display: none;
+  transition: all 0.3s;
+}
+
+.header__burger-button:hover {
+  opacity: 0.8;
+  transform: scale(0.95);
+}
+
+@media screen and (max-width: 1279px) {
+  .header {
+    max-width: calc(100% - 60px);
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .header {
+    max-width: calc(100% - 28px);
+  }
+
+  .header__signin-button {
+    font-size: 10px;
+    width: 54px;
+    height: 26px;
+  }
+
+  .header__signup-button {
+    font-size: 10px;
+    margin-right: 14px;
+  }
+
+  .header__profile {
+    display: none;
+  }
+
+  .header__navigation {
+    display: none;
+  }
+
+  .header__burger-button {
+    background-color: transparent;
+    display: block;
+    width: 44px;
+    height: 23px;
+    border: none;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .header__burger-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 28px;
+    height: 3px;
+    background-color: #fff;
+  }
+
+  .header__burger-button span {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 28px;
+    height: 3px;
+    background-color: #fff;
+  }
+
+  .header__burger-button:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 28px;
+    height: 3px;
+    background-color: #fff;
+  }
+}
