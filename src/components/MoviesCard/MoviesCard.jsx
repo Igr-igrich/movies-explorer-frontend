@@ -1,28 +1,57 @@
 import React from "react";
 
-function MoviesCard({ movie }) {
-  const name = movie.name;
-  const image = movie.link;
-  const duration = movie.duration;
-  const isSaved = movie.saved;
+import { Movie_URL } from "../../utils/constants";
+import { useLocation } from "react-router-dom";
+
+function MoviesCard({
+  movie,
+  savedMovies,
+  handleSaveMovie,
+  handleDeleteMovie,
+}) {
+  const location = useLocation();
+
+  const isMovieSaved = savedMovies.some(
+    (savedMovie) => savedMovie.movieId === movie.id,
+  );
+
+  const onSaveMovie = () => {
+    if (!isMovieSaved) {
+      return handleSaveMovie(movie);
+    }
+    return handleDeleteMovie(movie);
+  };
+
+  const handleDelete = () => {
+    handleDeleteMovie(movie);
+  };
 
   return (
     <li className="movies-card">
-      <img alt={name} className="movies-card__image" src={image} />
+      {/* <a href={movie.trailerLink} className="movie-card__trailerLink" rel="noreferrer" target="_blank"> */}
+      <img
+        alt={movie.nameRU}
+        className="movies-card__image"
+        src={movie.image.url ? `${Movie_URL}${movie.image.url}` : movie.image}
+      />
+      {/* </a> */}
       <div className="movies-card__wrapper">
-        <h2 className="movies-card__title">{name}</h2>
+        <h2 className="movies-card__title">{movie.nameRU}</h2>
         <p className="movies-card__duration">
-          {Math.floor(duration / 60)}ч {duration % 60}м
+          {Math.floor(movie.duration / 60)}ч {movie.duration % 60}м
         </p>
         {location.pathname === "/movies" && (
           <button
-            className={`movies-card__save-button ${
-              isSaved ? "movies-card__save-button_active" : ""
-            }`}
+            // className="movies-card__save-button"
+            className={`movies-card__save-button ${isMovieSaved && "movies-card__save-button_active"}`}
+            onClick={onSaveMovie}
           />
         )}
         {location.pathname === "/saved-movies" && (
-          <button className="movies-card__save-button movies-card__save-button_delete" />
+          <button
+            className="movies-card__save-button movies-card__save-button_delete"
+            onClick={handleDelete}
+          />
         )}
       </div>
     </li>

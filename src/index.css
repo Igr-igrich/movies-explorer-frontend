@@ -24,6 +24,8 @@
 @import url("./components/Profile/profile.css");
 @import url("./components/ProfileNavigation/profileNavigation.css");
 
+@import url("./components/Preloader/preloader.css");
+
 @import url("./components/BurgerMenu/burgerMenu.css");
 
 @import url("./components/Register/register.css");

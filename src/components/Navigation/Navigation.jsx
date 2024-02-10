@@ -2,18 +2,19 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 function Navigation() {
+  const setActiveMain = ({ isActive }) =>
+    `navigation__item navigation__main ${isActive ? "navigation__item_active" : ""}`;
+  const setActiveLink = ({ isActive }) =>
+    `navigation__item ${isActive ? "navigation__item_active" : ""}`;
   return (
     <nav className="navigation">
-      <NavLink to="/" className="navigation__item navigation__main">
+      <NavLink to="/" className={setActiveMain}>
         Главная
       </NavLink>
-      <NavLink
-        to="/movies"
-        className="navigation__item navigation__item_active"
-      >
+      <NavLink to="/movies" className={setActiveLink}>
         Фильмы
       </NavLink>
-      <NavLink to="/saved-movies" className="navigation__item">
+      <NavLink to="/saved-movies" className={setActiveLink}>
         Сохраненные фильмы
       </NavLink>
     </nav>

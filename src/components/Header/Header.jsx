@@ -5,7 +5,7 @@ import Navigation from "../Navigation/Navigation";
 import ProfileNavigation from "../ProfileNavigation/ProfileNavigation";
 import BurgerMenu from "../BurgerMenu/BurgerMenu";
 
-export default function Header() {
+export default function Header({ loggedIn }) {
   const location = useLocation();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,12 +23,12 @@ export default function Header() {
       <Link to="/" className="header__link">
         <img src={logo} className="header__logo" alt="logo" />
       </Link>
-      {["/movies", "/saved-movies", "/profile"].includes(location.pathname) && (
+      {loggedIn && (
         <div className="header__navigation">
           <Navigation />
         </div>
       )}
-      {["/"].includes(location.pathname) && (
+      {location.pathname === "/" && !loggedIn ? (
         <div className="header__authentication">
           <Link className="header__signup" to="/signup">
             <button type="submit" className="header__signup-button">
@@ -41,13 +41,15 @@ export default function Header() {
             </button>
           </Link>
         </div>
+      ) : (
+        ""
       )}
-      {["/movies", "/saved-movies", "/profile"].includes(location.pathname) && (
+      {loggedIn && (
         <div className="header__profile">
           <ProfileNavigation />
         </div>
       )}
-      {["/movies", "/saved-movies", "/profile"].includes(location.pathname) && (
+      {loggedIn && (
         <>
           <button
             className="header__burger-button"

@@ -64,13 +64,10 @@
   font-size: 10px;
   font-weight: 400;
   line-height: 12px;
-  letter-spacing: 0em;
 }
 
 .auth-form__button {
-  cursor: pointer;
   margin: 69px auto 16px;
-  background-color: #4285f4;
   width: 100%;
   height: 45px;
   color: #fff;
@@ -82,11 +79,30 @@
   border: none;
   border-radius: 3px;
   transition: all 0.6s;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.auth-form__button:hover {
+.auth-form__button_active {
+  cursor: pointer;
+  background-color: #4285f4;
+}
+
+.auth-form__button_active:hover {
   opacity: 0.8;
   transition: all 0.6s;
+}
+
+.auth-form__server-error {
+  position: absolute;
+  top: -23px;
+  color: #ee3465;
+  font-family: Inter;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 12px;
 }
 
 .auth-form__text {
