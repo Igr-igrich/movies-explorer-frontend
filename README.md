@@ -11,3 +11,5 @@ IP 158.160.139.211
 [Frontend](https://diploma.nomoredomainswork.ru/)
 
 [Backend](https://api.diploma.nomoredomainsmonster.ru/)
+
+[Ссылка на PR](https://github.com/Igr-igrich/movies-explorer-frontend/pull/2)
