@@ -3,7 +3,20 @@ import SearchForm from "./SearchForm/SearchForm";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import Preloader from "../Preloader/Preloader";
 
-import { filterMovies, filterShortMovies } from "../../utils/constants";
+import { 
+  filterMovies,
+  filterShortMovies, 
+  numberMoviesOnPc, 
+  numberMoviesOnTablet, 
+  numberMoviesOnPhone,
+  addMoviesOnPc,
+  addMoviesOnTablet,
+  addMoviesOnPhone,
+  pcWidth,
+  bigTabletWidth,
+  smallTabletWidth,
+  phoneWidth
+ } from "../../utils/constants";
 
 function Movies({
   movies,
@@ -16,12 +29,13 @@ function Movies({
   setErrorMessage,
   handleSaveMovie,
   handleDeleteMovie,
+  isDisable
 }) {
-  const [moviesPerPage, setMoviesPerPage] = React.useState(0); // Количетсво отображаемых фильмов при загрузке
+  const [moviesPerPage, setMoviesPerPage] = React.useState(0); // Количетсво отображаемых фильмов
   const [displayedMovies, setDisplayedMovies] = React.useState([]); // Фильмы, отображаемые при начальной загрузке
   const [isAllMoviesDisplayed, setIsAllMoviesDisplayed] = React.useState(false);
   const [moviesSearch, setMoviesSearch] = React.useState([]); // Фильмы по поиску
-  const [addFilms, setAddFilms] = React.useState(0); // Фильмы по поиску
+  const [addFilms, setAddFilms] = React.useState(0); // Количество добавляемых фильмов
   const [isCheckboxActive, setIsCheckboxActive] = React.useState(
     () => JSON.parse(localStorage.getItem("isCheckboxActive")) || false,
   ); // Стейт чекбокса короткометражек
@@ -55,15 +69,15 @@ function Movies({
 
   React.useEffect(() => {
     setMoviesPerPage(
-      window.innerWidth >= 769
-        ? moviesPerPage || 12
-        : window.innerWidth >= 481 && window.innerWidth <= 768
-          ? moviesPerPage || 8
-          : window.innerWidth <= 480
-            ? moviesPerPage || 5
+      window.innerWidth >= pcWidth
+        ? numberMoviesOnPc
+        : window.innerWidth >= smallTabletWidth && window.innerWidth <= bigTabletWidth
+          ? numberMoviesOnTablet
+          : window.innerWidth <= phoneWidth
+            ? numberMoviesOnPhone
             : 0,
     );
-  }, [addFilms]);
+  }, [addFilms, search]);
 
   // Поиск фильмов
   React.useEffect(() => {
@@ -77,7 +91,7 @@ function Movies({
         setMoviesSearch([]);
       }
     }
-  }, [movies, isCheckboxActive]);
+  }, [search, movies, isCheckboxActive]);
 
   React.useEffect(() => {
     setIsAllMoviesDisplayed(moviesSearch.length === displayedMovies.length);
@@ -113,12 +127,12 @@ function Movies({
   React.useEffect(() => {
     const handleResize = () => {
       let showMore =
-        window.innerWidth >= 769
-          ? 3
-          : window.innerWidth >= 481 && window.innerWidth <= 768
-            ? 2
-            : window.innerWidth <= 480
-              ? 2
+        window.innerWidth >= pcWidth
+          ? addMoviesOnPc
+          : window.innerWidth >= smallTabletWidth && window.innerWidth <= bigTabletWidth
+            ? addMoviesOnTablet
+            : window.innerWidth <= phoneWidth
+              ? addMoviesOnPhone
               : 0;
       setAddFilms(showMore);
     };
@@ -147,6 +161,7 @@ function Movies({
         setIsCheckboxActive={setIsCheckboxActive}
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
+        isDisable={isDisable}
       />
       {preloader ? (
         <Preloader />

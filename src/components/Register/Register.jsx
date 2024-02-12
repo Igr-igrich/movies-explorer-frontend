@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import logo from "../../images/logo.svg";
 import { useForm } from "react-hook-form";
 
-function Register({ onRegister, errorServer, setErrorServer }) {
+function Register({ onRegister, errorServer, isDisable }) {
   const {
     register,
     formState: { errors, isValid },
@@ -108,8 +108,8 @@ function Register({ onRegister, errorServer, setErrorServer }) {
           </span>
         </div>
         <button
-          className={`auth-form__button  ${isValid ? "auth-form__button_active" : ""}`}
-          disabled={!isValid}
+          className={`auth-form__button  ${!(!isValid || isDisable) ? "auth-form__button_active" : ""}`}
+          disabled={!isValid || isDisable}
         >
           <span className="auth-form__server-error">{errorServer}</span>
           Зарегистрироваться

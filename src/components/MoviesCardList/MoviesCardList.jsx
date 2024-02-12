@@ -6,7 +6,6 @@ function MoviesCardList({
   savedMovies,
   showMore,
   isAllMoviesDisplayed,
-  isCheckboxActive,
   handleSaveMovie,
   handleDeleteMovie,
 }) {

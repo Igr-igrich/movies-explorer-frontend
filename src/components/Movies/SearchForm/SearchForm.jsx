@@ -8,17 +8,28 @@ function SearchForm({
   setIsCheckboxActive,
   errorMessage,
   setErrorMessage,
+  isDisable
 }) {
+  // const savedSearch = JSON.parse(localStorage.getItem("search"));
+  const [submitSearch, setSubmitSearch] = React.useState(search);
+
+  React.useEffect(() => {
+    setSubmitSearch(search)
+  }, [search])
+
+  
+
   function _handleChange(evt) {
-    setSearch(evt.target.value);
+    setSubmitSearch(evt.target.value);
     setErrorMessage("");
   }
 
   function _handleSubmit(evt) {
     evt.preventDefault();
-    !search
+    !submitSearch
       ? setErrorMessage("Нужно ввести ключевое слово")
       : setErrorMessage("");
+    setSearch(submitSearch);
   }
 
   return (
@@ -28,13 +39,14 @@ function SearchForm({
           className="search-form__input"
           placeholder="Фильм"
           type="search"
-          value={search}
+          value={submitSearch}
           onChange={_handleChange}
         />
         <button
           className="search-form__button"
           type="submit"
           onClick={_handleSubmit}
+          disabled={isDisable}
         />
       </div>
       {errorMessage && (

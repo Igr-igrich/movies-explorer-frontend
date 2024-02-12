@@ -12,6 +12,7 @@ function SavedMovies({
   errorMessage,
   setErrorMessage,
   handleDeleteMovie,
+  isDisable
 }) {
   const [filteredSavedMovies, setFilteredSavedMovies] = React.useState([]); // Поиск по отфильтрованным фильмам
   const [isCheckboxActive, setIsCheckboxActive] = React.useState(false);
@@ -41,6 +42,7 @@ function SavedMovies({
         setIsCheckboxActive={setIsCheckboxActive}
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
+        isDisable={isDisable}
       />
       {savedMovies.length === 0 && search.length > 0 ? (
         <p className="movies__error">

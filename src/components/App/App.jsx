@@ -33,6 +33,7 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [savedMovies, setSavedMovies] = React.useState([]);
   const [successMessage, setSuccessMessage] = React.useState("");
+  const [isDisable, setIsDisable] = React.useState(false);
 
   React.useEffect(() => {
     if (loggedIn) {
@@ -43,6 +44,12 @@ function App() {
         })
         .catch((err) => {
           console.log(err);
+          if (err === 401) {
+            setCurrentUser(null);
+            setLoggedIn(false);
+            localStorage.clear();
+            return;
+          }
         });
       api
         .getUserInfo()
@@ -50,13 +57,21 @@ function App() {
           setCurrentUser(user);
         })
         .catch((err) => {
+          if (err === 401) {
+            setCurrentUser(null);
+            setLoggedIn(false);
+            localStorage.clear();
+            return;
+          }
           console.log(err);
         });
     }
   }, [loggedIn]);
 
   React.useEffect(() => {
-    if (search) {
+    console.log('При любом поиске');
+    if (search && movies.length === 0) {
+      console.log("Только при первом поиске");
       setPreloader(true);
       moviesApi
         .getAllMovies()
@@ -72,7 +87,7 @@ function App() {
           setPreloader(false);
         });
     }
-  }, [search]);
+  }, [search, movies]);
 
   const handleTokenCheck = (jwt) => {
     auth
@@ -95,6 +110,7 @@ function App() {
   }, []);
 
   const handleRegistration = ({ name, email, password }) => {
+    setIsDisable(true)
     auth
       .register(name, email, password)
       .then(() => {
@@ -112,10 +128,14 @@ function App() {
         if (err === 409) {
           setErrorServer("Пользоваетль с таким email уже зарегестрирован");
         }
-      });
+      })
+      .finally(
+        setIsDisable(false)
+      );
   };
 
   const handleLogIn = ({ email, password }) => {
+    setIsDisable(true);
     auth
       .login(email, password)
       .then((res) => {
@@ -133,7 +153,10 @@ function App() {
         if (err === 401) {
           setErrorServer("Неправильный email или пароль");
         }
-      });
+      })
+      .finally(
+        setIsDisable(false)
+      );
   };
 
   const handleLogOut = () => {
@@ -145,6 +168,7 @@ function App() {
   };
 
   const handleUpdateUser = (data) => {
+    setIsDisable(true);
     api
       .changeUserInfo(data)
       .then(() => {
@@ -153,18 +177,26 @@ function App() {
         setCurrentUser({ ...currentUser, ...data });
       })
       .catch((err) => {
-        console.log(err);
+        if (err === 401) {
+          setCurrentUser(null);
+          setLoggedIn(false);
+          localStorage.clear();
+          return;
+        }
         if (err === 409) {
           setErrorServer("Пользоваетль с таким email уже зарегестрирован");
         } else if (err === 400) {
           setErrorServer("Введены некорректные данные");
         }
+        console.log(err);
       })
-      .finally(() => {});
+      .finally(
+        setIsDisable(false)
+      );
   };
 
   function handleSaveMovie(movie) {
-    console.log(movie);
+    setIsDisable(true);
     const movieCard = {
       country: movie.country,
       director: movie.director,
@@ -184,22 +216,46 @@ function App() {
         setSavedMovies((prev) => [saveMovie, ...prev]);
       })
       .catch((error) => {
+        if (err === 401) {
+          setCurrentUser(null);
+          setLoggedIn(false);
+          localStorage.clear();
+          return;
+        }
         console.log(error);
-      });
+      })
+      .finally(
+        setIsDisable(false)
+      );
   }
 
   function handleDeleteMovie(movie) {
+    setIsDisable(true)
     const movieToDelete = savedMovies.find(
       (savedMovies) => savedMovies.movieId === movie.id,
     );
-    api.deleteMovie(movie._id || movieToDelete._id).then((movieToDelete) => {
-      console.log(movieToDelete);
-      setSavedMovies(
-        savedMovies.filter(
-          (savedMovie) => savedMovie._id !== movieToDelete._id,
-        ),
+    api
+      .deleteMovie(movie._id || movieToDelete._id)
+      .then((movieToDelete) => {
+        console.log(movieToDelete);
+        setSavedMovies(
+          savedMovies.filter(
+            (savedMovie) => savedMovie._id !== movieToDelete._id,
+          ),
+        );
+      })
+      .catch((error) => {
+        if (err === 401) {
+          setCurrentUser(null);
+          setLoggedIn(false);
+          localStorage.clear();
+          return;
+        }
+        console.log(error);
+      })
+      .finally(
+        setIsDisable(false)
       );
-    });
   }
 
   React.useEffect(() => {
@@ -232,6 +288,7 @@ function App() {
                 setErrorMessage={setErrorMessage}
                 handleSaveMovie={handleSaveMovie}
                 handleDeleteMovie={handleDeleteMovie}
+                isDisable={isDisable}
               />
             }
           />
@@ -248,6 +305,7 @@ function App() {
                 errorMessage={errorMessage}
                 setErrorMessage={setErrorMessage}
                 handleDeleteMovie={handleDeleteMovie}
+                isDisable={isDisable}
               />
             }
           />
@@ -263,22 +321,41 @@ function App() {
                 setSuccessMessage={setSuccessMessage}
                 successMessage={successMessage}
                 currentUser={currentUser}
+                isDisable={isDisable}
               />
             }
           />
           <Route
             path="/signin"
-            element={<Login onLogin={handleLogIn} errorServer={errorServer} />}
+            element={
+              <ProtectedRouteElement
+                element={Login}
+                onLogin={handleLogIn}
+                errorServer={errorServer}
+                isDisable={isDisable}
+                loggedIn={!loggedIn}
+              />
+            }
           />
           <Route
             path="/signup"
             element={
-              <Register
+              <ProtectedRouteElement
+                element={Register}
                 onRegister={handleRegistration}
                 errorServer={errorServer}
                 setErrorServer={setErrorServer}
+                isDisable={isDisable}
+                loggedIn={!loggedIn}
               />
             }
+            // element={
+            //   <Register
+            //     onRegister={handleRegistration}
+            //     errorServer={errorServer}
+            //     setErrorServer={setErrorServer}
+            //   />
+            // }
           />
           <Route path="*" element={<PageNotFound />} />
         </Routes>

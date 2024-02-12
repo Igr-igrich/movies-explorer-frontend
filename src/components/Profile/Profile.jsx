@@ -8,8 +8,11 @@ function Profile({
   errorServer,
   successMessage,
   setSuccessMessage,
+  isDisable,
 }) {
   const currentUser = React.useContext(CurrentUserContext);
+
+  const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
 
   const {
     register,
@@ -18,6 +21,10 @@ function Profile({
   } = useForm({
     mode: "all",
   });
+
+  React.useEffect(() => {
+    setIsButtonDisabled(true);
+  }, [currentUser]);
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -54,6 +61,9 @@ function Profile({
                 autoComplete="off"
                 {...register("name", {
                   value: currentUser.name,
+                  onChange: (evt) => {
+                    (evt.target.value === currentUser.name) ? setIsButtonDisabled(true) : setIsButtonDisabled(false)
+                  },
                   required: "Поле обязательно к заполнению",
                   minLength: {
                     value: 2,
@@ -84,6 +94,9 @@ function Profile({
                 autoComplete="off"
                 {...register("email", {
                   value: currentUser.email,
+                  onChange: (evt) => {
+                    (evt.target.value === currentUser.email) ? setIsButtonDisabled(true) : setIsButtonDisabled(false)
+                  },
                   required: "Поле обязательно к заполнению",
                   maxLength: {
                     value: 30,
@@ -112,8 +125,8 @@ function Profile({
           {successMessage}
         </span>
         <button
-          className={`profile__button profile__button-edit ${isValid ? "profile__button_active" : ""}`}
-          disabled={!isValid}
+          className={`profile__button profile__button-edit ${!(isButtonDisabled || !isValid || isDisable) ? "profile__button_active" : ""}`}
+          disabled={isButtonDisabled || !isValid || isDisable}
         >
           Редактировать
         </button>
